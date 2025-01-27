@@ -1,45 +1,62 @@
-
 import { ITransaction } from '../../types';
 import supabase from './supabase';
 
-// Function to send a tip and log the transaction
-export const sendTip = async (
+export const sendTipToDb = async (
   senderAddress: string,
   receiverAddress: string,
   amount: number,
   message: string | null,
   transactionHash: string
 ): Promise<ITransaction | null> => {
-  // 1. Log the transaction in the Transactions table
-  const { data: transaction, error: txnError } = await supabase
-    .from('transactions')
-    .insert([{ sender_wallet_address: senderAddress, receiver_wallet_address: receiverAddress, amount, message, transaction_hash: transactionHash }])
-    .single();
+  try {
+    // 1. Insert transaction record
+    const { data: transaction, error: txnError } = await supabase
+      .from('transactions')
+      .insert([
+        {
+          sender_wallet_address: senderAddress,
+          receiver_wallet_address: receiverAddress,
+          amount,
+          message,
+          transaction_hash: transactionHash,
+        },
+      ])
+      .single();
 
-  if (txnError) {
-    console.error('Error creating transaction:', txnError);
+    if (txnError) {
+      console.error('Error inserting transaction:', txnError);
+      return null;
+    }
+
+    // 2. Update sender's stats
+    const { error: senderError } = await supabase
+      .from('users')
+      .update({
+        total_sent: supabase.rpc('increment_field', { field_name: 'total_sent', amount }),
+        total_tips_sent: supabase.rpc('increment_field', { field_name: 'total_tips_sent', amount: 1 }),
+      })
+      .eq('wallet_address', senderAddress);
+
+    if (senderError) {
+      console.error('Error updating sender stats:', senderError);
+    }
+
+    // 3. Update receiver's stats
+    const { error: receiverError } = await supabase
+      .from('users')
+      .update({
+        total_received: supabase.rpc('increment_field', { field_name: 'total_received', amount }),
+        total_tips_received: supabase.rpc('increment_field', { field_name: 'total_tips_received', amount: 1 }),
+      })
+      .eq('wallet_address', receiverAddress);
+
+    if (receiverError) {
+      console.error('Error updating receiver stats:', receiverError);
+    }
+
+    return transaction;
+  } catch (error) {
+    console.error('Unexpected error in sendTip:', error);
     return null;
   }
-
-  // 2. Update the sender's total_sent in Users table
-  const { data: senderData, error: senderError } = await supabase
-    .from('users')
-    .update({ total_sent: supabase.raw('total_sent + ?', [amount]), total_tips_sent: supabase.raw('total_tips_sent + 1') })
-    .eq('wallet_address', senderAddress);
-
-  if (senderError) {
-    console.error('Error updating sender:', senderError);
-  }
-
-  // 3. Update the receiver's total_received in Users table
-  const { data: receiverData, error: receiverError } = await supabase
-    .from('users')
-    .update({ total_received: supabase.raw('total_received + ?', [amount]), total_tips_received: supabase.raw('total_tips_received + 1') })
-    .eq('wallet_address', receiverAddress);
-
-  if (receiverError) {
-    console.error('Error updating receiver:', receiverError);
-  }
-
-  return transaction; // Return the transaction object
 };

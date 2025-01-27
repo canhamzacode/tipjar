@@ -3,20 +3,14 @@ import React, { useState } from "react";
 import { TipButtons } from "../TipButton";
 import { useUser } from "@/context/userContext";
 import { CustomModal } from "../Modal";
-import { useAppKitAccount, useAppKitProvider } from "@reown/appkit/react";
-import { Connection, clusterApiUrl } from "@solana/web3.js";
-import { sendTipToBlockchain } from "@/utils/sendTipToBlockchain";
-import { WalletProvider } from "../../../types";
 import { TipStatsCard } from "../TipStatsCard";
 import { TipForm } from "../TipModal";
+// import { sendTipToDb } from "@/utils";
 
 const TipStatistics = () => {
-  const { user, tokens } = useUser();
+  const { user, solBalance, sendTip } = useUser();
   const [modal, setModal] = useState({ open: false, type: "" });
-  const connection = new Connection(clusterApiUrl("devnet"));
   const [loading, setLoading] = useState(false);
-  const { address, isConnected } = useAppKitAccount();
-  const { walletProvider } = useAppKitProvider<WalletProvider>("solana");
 
   const closeModal = () => setModal({ ...modal, open: false });
 
@@ -28,23 +22,14 @@ const TipStatistics = () => {
       return;
     }
 
-    if (!address || !isConnected || !walletProvider) {
-      alert("Please connect your wallet.");
-      return;
-    }
-
     setLoading(true);
     try {
       const usdcAmount = Number(amount);
-      const signature = await sendTipToBlockchain(
-        connection,
-        walletAddress,
-        usdcAmount,
-        address,
-        walletProvider
-      );
+      const signature = await sendTip(walletAddress, usdcAmount);
       console.log("Transaction successful! Signature:", signature);
       alert(`Tip sent successfully! Transaction Hash: ${signature}`);
+
+      // await sendTipToDb(user.wallet_address, walletAddress, usdcAmount, null, signature);
       closeModal();
     } catch (error) {
       console.error("Error sending tip:", error);
@@ -59,12 +44,7 @@ const TipStatistics = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-semibold mb-4">Tip Dashboard</h2>
-          <p>Total No Of Sol {tokens.map((token)=> (
-            <div key={token.mintAddress}>
-              {token.balance}
-              {token.mintAddress}
-            </div>
-          ))}</p>
+          <p>Total SOL Balance: {solBalance}</p>
         </div>
         <TipButtons onClick={() => setModal({ open: true, type: "send-tips" })} />
       </div>

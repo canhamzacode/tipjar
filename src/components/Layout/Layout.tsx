@@ -11,11 +11,12 @@ interface IProps {
 
 const AppLayout = ({ children }: IProps) => {
   const { isConnected,address } = useAppKitAccount();
-  const {fetchData} = useUser();
+  const {fetchData, getSolBalance} = useUser();
 
   useEffect(()=> {
     if (address && isConnected) {
-        fetchData(address)
+      fetchData(address);
+      getSolBalance(address);
     }
   },[isConnected, address])
 
