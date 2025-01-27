@@ -10,3 +10,5 @@ export * from "./TipStatistics"
 export * from "./TipButton"
 export * from "./Modal"
 export * from "./Layout"
+export * from "./TipStatsCard"
+export * from "./TipModal";

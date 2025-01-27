@@ -1,8 +1,10 @@
 "use client";
 
 import React, { createContext, useState, useContext, ReactNode } from 'react';
-import { checkOrCreateAccount, fetchWalletTokens, sendTip, getWalletAddressByUsername } from '@/utils';
+import { checkOrCreateAccount, fetchWalletTokens, getWalletAddressByUsername } from '@/utils';
 import { IToken, IUser } from '../../types';
+import { sendTipToBlockchain } from '@/utils/sendTipToBlockchain';
+import { clusterApiUrl, Connection } from '@solana/web3.js';
 
 
 interface UserContextType {
@@ -25,6 +27,8 @@ export const UserProvider = ({ children }: IProps) => {
   const [tokens, setTokens] = useState<IToken[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const connection = new Connection(clusterApiUrl('devnet'));
+
   const fetchData = async (walletAddress: string) => {
     setLoading(true);
     try {
@@ -40,11 +44,12 @@ export const UserProvider = ({ children }: IProps) => {
     }
   };
 
-  const handleSendTip = async (receiverUsername: string, amount: number, message: string) => {
+  const handleSendTip = async (receiverUsername: string, amount: number) => {
     const receiverWalletAddress = await getWalletAddressByUsername(receiverUsername);
     if (receiverWalletAddress && user?.wallet_address) {
-      const transactionHash = 'some_transaction_hash';
-      await sendTip(user.wallet_address, receiverWalletAddress, amount, message, transactionHash);
+      
+      
+      console.log('Tip sent successfully:', signature);
     }
   };
 

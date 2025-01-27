@@ -69,7 +69,7 @@ const CustomModal = ({
        className={`${containerClass} ${isSidePosition ? "h-screen overflow-y-auto" : "h-full"} ${placementClass}`}
       >
         <div
-          className={`bg-bg-card rounded-lg shadow-lg relative ${modalClassName}`}
+          className={`bg-white rounded-lg shadow-lg relative ${modalClassName}`}
           style={{ width: width, maxHeight: "100vh" }}
         >
           {!customHeader && (

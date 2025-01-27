@@ -26,3 +26,11 @@ export interface ITransaction {
     created_at: string;
 }
   
+
+export interface WalletProvider {
+    signTransaction: (transaction: Transaction) => Promise<Transaction>;
+    sendTransaction: (
+      transaction: Transaction,
+      connection: Connection
+    ) => Promise<string>;
+}
