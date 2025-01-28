@@ -11,14 +11,25 @@ interface IProps {
 
 const AppLayout = ({ children }: IProps) => {
   const { isConnected,address } = useAppKitAccount();
-  const {fetchData, getSolBalance} = useUser();
+  const {fetchData, getSolBalance, fetchAllTransactions} = useUser();
 
-  useEffect(()=> {
-    if (address && isConnected) {
-      fetchData(address);
-      getSolBalance(address);
-    }
-  },[isConnected, address])
+  useEffect(() => {
+    const fetchAllData = async () => {
+      if (address && isConnected) {
+        try {
+          await Promise.all([
+            fetchData(address),
+            getSolBalance(address),
+            fetchAllTransactions(address),
+          ]);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
+    };
+  
+    fetchAllData();
+  }, [isConnected, address]);
 
   return (
     <>

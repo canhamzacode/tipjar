@@ -1,31 +1,24 @@
 "use client";
 import React from 'react';
 import { Table } from 'antd';
+import { useUser } from '@/context/userContext';
+import { ITransaction } from '../../../types';
+import { useAppKitAccount } from '@reown/appkit/react';
+import { SOLANA_EXPLORER_URL } from '@/config';
 
 const TipsTable = () => {
-  const tipsReceivedData = [
-    {
-      key: '1',
-      coinName: 'Solana',
-      transactionHash: '0xabc123...def456',
-      symbol: 'SOL',
-      valueInUSDC: 5.75,
-    },
-    {
-      key: '2',
-      coinName: 'Solana',
-      transactionHash: '0xdef456...abc123',
-      symbol: 'SOL',
-      valueInUSDC: 3.25,
-    },
-    {
-      key: '3',
-      coinName: 'Solana',
-      transactionHash: '0xghi789...klm012',
-      symbol: 'SOL',
-      valueInUSDC: 7.40,
-    },
-  ];
+  const { transactions } = useUser();
+  const { address } = useAppKitAccount();
+
+  const tipsReceivedData = transactions.map((transaction: ITransaction, index: number) => ({
+    key: index + 1,
+    coinName: 'Solana',
+    transactionHash: transaction.transaction_hash,
+    symbol: 'SOL',
+    valueInSOL: transaction.amount,
+    status: transaction.receiver_wallet_address === address ? 'Received' : 'Sent', 
+    message: transaction.message || '-',
+  }));
 
   const columns = [
     {
@@ -37,9 +30,9 @@ const TipsTable = () => {
       title: 'Transaction Hash',
       dataIndex: 'transactionHash',
       key: 'transactionHash',
-      render: (text:string) => (
+      render: (text: string) => (
         <a
-          href={`https://explorer.solana.com/tx/${text}`}
+          href={SOLANA_EXPLORER_URL.replace("{transactionHash}", text)}
           target="_blank"
           rel="noopener noreferrer"
           className="text-blue-500 hover:underline"
@@ -54,10 +47,32 @@ const TipsTable = () => {
       key: 'symbol',
     },
     {
-      title: 'Value in USDC',
-      dataIndex: 'valueInUSDC',
-      key: 'valueInUSDC',
-      render: (text: number) => <span>${text.toFixed(2)}</span>,
+      title: 'Value in SOL',
+      dataIndex: 'valueInSOL',
+      key: 'valueInSOL',
+      render: (text: number) => <span>{text.toFixed(4)} SOL</span>,
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      render: (status: string) => (
+        <span
+          className={`px-2 py-1 rounded-full text-white ${
+            status === 'Received' ? 'bg-blue-500' : 'bg-purple-500'
+          }`}
+        >
+          {status}
+        </span>
+      ),
+    },
+    {
+      title: 'Message',
+      dataIndex: 'message',
+      key: 'message',
+      render: (message: string) => (
+        <span className="text-gray-700">{message}</span>
+      ),
     },
   ];
 

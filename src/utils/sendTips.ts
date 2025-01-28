@@ -9,7 +9,6 @@ export const sendTipToDb = async (
   transactionHash: string
 ): Promise<ITransaction | null> => {
   try {
-    // 1. Insert transaction record
     const { data: transaction, error: txnError } = await supabase
       .from('transactions')
       .insert([
@@ -28,35 +27,43 @@ export const sendTipToDb = async (
       return null;
     }
 
-    // 2. Update sender's stats
-    const { error: senderError } = await supabase
-      .from('users')
-      .update({
-        total_sent: supabase.rpc('increment_field', { field_name: 'total_sent', amount }),
-        total_tips_sent: supabase.rpc('increment_field', { field_name: 'total_tips_sent', amount: 1 }),
-      })
-      .eq('wallet_address', senderAddress);
-
-    if (senderError) {
-      console.error('Error updating sender stats:', senderError);
-    }
-
-    // 3. Update receiver's stats
-    const { error: receiverError } = await supabase
-      .from('users')
-      .update({
-        total_received: supabase.rpc('increment_field', { field_name: 'total_received', amount }),
-        total_tips_received: supabase.rpc('increment_field', { field_name: 'total_tips_received', amount: 1 }),
-      })
-      .eq('wallet_address', receiverAddress);
-
-    if (receiverError) {
-      console.error('Error updating receiver stats:', receiverError);
-    }
-
     return transaction;
+
   } catch (error) {
-    console.error('Unexpected error in sendTip:', error);
+    console.error('Unexpected error in sendTipToDb:', error);
     return null;
   }
+};
+
+
+
+
+export const getUserTotalSent = async (userAddress: string) => {
+  const { data, error } = await supabase
+    .from('transactions')
+    .select('amount')
+    .eq('sender_wallet_address', userAddress);
+
+  if (error) {
+    console.error('Error fetching total sent:', error);
+    return 0;
+  }
+
+  const totalSent = data.reduce((total, txn) => total + txn.amount, 0);
+  return totalSent;
+};
+
+export const getUserTotalReceived = async (userAddress: string) => {
+  const { data, error } = await supabase
+    .from('transactions')
+    .select('amount')
+    .eq('receiver_wallet_address', userAddress);
+
+  if (error) {
+    console.error('Error fetching total received:', error);
+    return 0;
+  }
+
+  const totalReceived = data.reduce((total, txn) => total + txn.amount, 0);
+  return totalReceived;
 };

@@ -1,3 +1,4 @@
+import { SOLANA_CLUSTER } from '@/config';
 import { clusterApiUrl, Connection, PublicKey } from '@solana/web3.js';
 
 /**
@@ -9,7 +10,7 @@ import { clusterApiUrl, Connection, PublicKey } from '@solana/web3.js';
  */
 export const fetchWalletTokens = async (
   walletAddress: string,
-  rpcUrl: string = clusterApiUrl('devnet')
+  rpcUrl: string = clusterApiUrl(SOLANA_CLUSTER)
 ) => {
   try {
     // Validate the wallet address

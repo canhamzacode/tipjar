@@ -8,10 +8,6 @@ export interface IUser {
     id: number;
     username: string;
     wallet_address: string;
-    total_received: number;
-    total_sent: number;
-    total_tips_received: number;
-    total_tips_sent: number;
     created_at: string;
     updated_at: string;
 }

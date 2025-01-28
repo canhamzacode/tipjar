@@ -5,19 +5,21 @@ import { useUser } from "@/context/userContext";
 import { CustomModal } from "../Modal";
 import { TipStatsCard } from "../TipStatsCard";
 import { TipForm } from "../TipModal";
-// import { sendTipToDb } from "@/utils";
+import { useAppKitAccount } from "@reown/appkit/react";
+import { sendTipToDb } from "@/utils";
 
 const TipStatistics = () => {
-  const { user, solBalance, sendTip } = useUser();
+  const { solBalance, sendTip, transactionSummary } = useUser();
   const [modal, setModal] = useState({ open: false, type: "" });
   const [loading, setLoading] = useState(false);
+  const { address: senderAddress, } = useAppKitAccount();
 
   const closeModal = () => setModal({ ...modal, open: false });
 
-  const handleTipSubmit = async (formData: { walletAddress: string; amount: string }) => {
-    const { walletAddress, amount } = formData;
+  const handleTipSubmit = async (formData: { walletAddress: string; amount: string; message?: string }) => {
+    const { walletAddress, amount, message } = formData;
 
-    if (!walletAddress || !amount || isNaN(Number(amount))) {
+    if (!walletAddress || !amount || isNaN(Number(amount)) || !senderAddress) {
       alert("Please fill in all fields correctly.");
       return;
     }
@@ -29,7 +31,8 @@ const TipStatistics = () => {
       console.log("Transaction successful! Signature:", signature);
       alert(`Tip sent successfully! Transaction Hash: ${signature}`);
 
-      // await sendTipToDb(user.wallet_address, walletAddress, usdcAmount, null, signature);
+      console.log(usdcAmount);
+      await sendTipToDb(senderAddress, walletAddress, usdcAmount, message || null, signature);
       closeModal();
     } catch (error) {
       console.error("Error sending tip:", error);
@@ -51,25 +54,25 @@ const TipStatistics = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <TipStatsCard
           title="Tips Sent"
-          value={user?.total_sent || 0}
+          value={`${transactionSummary?.totalSent || 0} Sol`}
           gradientFrom="from-purple-600"
           gradientTo="to-blue-500"
         />
         <TipStatsCard
           title="Tips Received"
-          value={user?.total_received || 0}
+          value={`${transactionSummary?.totalReceived || 0} Sol`}
           gradientFrom="from-purple-600"
           gradientTo="to-blue-500"
         />
         <TipStatsCard
-          title="Total Tipped"
-          value={`$${user?.total_tips_sent || 0}`}
+          title="Total No Tipped"
+          value={`${transactionSummary?.totalSentCount || 0}`}
           gradientFrom="from-purple-600"
           gradientTo="to-blue-500"
         />
         <TipStatsCard
           title="Total Received"
-          value={`$${user?.total_tips_received || 0}`}
+          value={`${transactionSummary?.totalReceivedCount || 0}`}
           gradientFrom="from-purple-600"
           gradientTo="to-blue-500"
         />

@@ -3,7 +3,7 @@ import { getWalletAddressByUsername } from "@/utils";
 import React, { useState } from "react";
 
 interface TipFormProps {
-  onSubmit: (formData: { walletAddress: string; amount: string }) => void;
+  onSubmit: (formData: { walletAddress: string; amount: string; message?: string }) => void;
   loading: boolean;
 }
 
@@ -12,6 +12,7 @@ const TipForm: React.FC<TipFormProps> = ({ onSubmit, loading }) => {
     username: "",
     walletAddress: "",
     amount: "",
+    message: "", // Added message field
   });
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchError, setSearchError] = useState<string | null>(null);
@@ -48,14 +49,14 @@ const TipForm: React.FC<TipFormProps> = ({ onSubmit, loading }) => {
   };
 
   const handleSubmit = () => {
-    const { walletAddress, amount } = formData;
+    const { walletAddress, amount, message } = formData;
 
     if (!walletAddress || !amount || isNaN(Number(amount))) {
       alert("Please fill in all fields correctly.");
       return;
     }
 
-    onSubmit({ walletAddress, amount });
+    onSubmit({ walletAddress, amount, message: message || undefined }); // Include message
   };
 
   return (
@@ -106,7 +107,7 @@ const TipForm: React.FC<TipFormProps> = ({ onSubmit, loading }) => {
           onChange={handleChange}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2"
           placeholder="Enter wallet address"
-          readOnly={showUsernameSearch} // Make it read-only if username search is active
+          readOnly={showUsernameSearch}
         />
       </div>
 
@@ -120,6 +121,19 @@ const TipForm: React.FC<TipFormProps> = ({ onSubmit, loading }) => {
           onChange={handleChange}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2"
           placeholder="Enter amount in USD"
+        />
+      </div>
+
+      {/* Message Field */}
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">Message (Optional)</label>
+        <input
+          type="text"
+          name="message"
+          value={formData.message}
+          onChange={handleChange}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2"
+          placeholder="Enter an optional message"
         />
       </div>
 

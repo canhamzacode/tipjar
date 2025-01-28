@@ -17,3 +17,12 @@ export const networks = [solana, solanaTestnet, solanaDevnet] as [AppKitNetwork,
 export const solanaWeb3JsAdapter = new SolanaAdapter({
   wallets: [new PhantomWalletAdapter(), new SolflareWalletAdapter()]
 })
+
+
+import { Connection, clusterApiUrl } from "@solana/web3.js";
+
+export const SOLANA_CLUSTER = "devnet"; // Change to "mainnet-beta" or "testnet" when needed
+
+export const connection = new Connection(clusterApiUrl(SOLANA_CLUSTER));
+
+export const SOLANA_EXPLORER_URL = `https://explorer.solana.com/tx/{transactionHash}?cluster=${SOLANA_CLUSTER}`;

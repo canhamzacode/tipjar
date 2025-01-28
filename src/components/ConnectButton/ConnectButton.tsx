@@ -4,8 +4,8 @@ import { useAppKit, useAppKitAccount } from '@reown/appkit/react';
 import React from 'react';
 
 const ConnectButton = () => {
-  const { open } = useAppKit();
-  const { isConnected, } = useAppKitAccount();
+  const { open, } = useAppKit();
+  const { isConnected } = useAppKitAccount();
 
   return (
     <button
