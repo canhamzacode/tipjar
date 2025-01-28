@@ -40,8 +40,7 @@ export const sendTipToBlockchain = async (
       signedTransaction,
       connection
     );
-
-    alert("Tip sent successfully!");
+    
     return signature;
   } catch (error) {
     console.error("Error sending tip:", error);

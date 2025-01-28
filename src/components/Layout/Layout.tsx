@@ -4,6 +4,7 @@ import { Navbar } from '../Navbar'
 import { Footer } from '../Footer'
 import { useAppKitAccount } from '@reown/appkit/react'
 import { useUser } from '@/context/userContext'
+import { ToastContainer } from 'react-toastify'
 
 interface IProps {
     children: ReactNode
@@ -33,11 +34,12 @@ const AppLayout = ({ children }: IProps) => {
 
   return (
     <>
-        <Navbar />
-        <div className="bg-white min-h-screen">
-            {children}
-        </div>
-        <Footer />
+      <ToastContainer />
+      <Navbar />
+      <div className="bg-white min-h-screen">
+          {children}
+      </div>
+      <Footer />
     </>
   )
 }

@@ -12,3 +12,5 @@ export * from "./Modal"
 export * from "./Layout"
 export * from "./TipStatsCard"
 export * from "./TipModal";
+export * from "./Toast";
+

@@ -125,7 +125,6 @@ export const UserProvider = ({ children }: IProps) => {
 
       const signature = await walletProvider.sendTransaction(signedTransaction, connection);
 
-      alert("Tip sent successfully!");
       return signature;
     } catch (error) {
       console.error("Error sending tip:", error);

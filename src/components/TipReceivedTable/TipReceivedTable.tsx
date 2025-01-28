@@ -7,7 +7,7 @@ import { useAppKitAccount } from '@reown/appkit/react';
 import { SOLANA_EXPLORER_URL } from '@/config';
 
 const TipsTable = () => {
-  const { transactions } = useUser();
+  const { transactions,loading } = useUser();
   const { address } = useAppKitAccount();
 
   const tipsReceivedData = transactions.map((transaction: ITransaction, index: number) => ({
@@ -84,6 +84,7 @@ const TipsTable = () => {
         dataSource={tipsReceivedData}
         pagination={false}
         rowClassName="hover:bg-gray-100"
+        loading={loading}
         bordered
       />
     </div>

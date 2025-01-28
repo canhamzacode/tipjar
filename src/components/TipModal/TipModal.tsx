@@ -1,6 +1,8 @@
 "use client";
 import { getWalletAddressByUsername } from "@/utils";
 import React, { useState } from "react";
+import { Toast } from "../Toast";
+import { useAppKitAccount } from "@reown/appkit/react";
 
 interface TipFormProps {
   onSubmit: (formData: { walletAddress: string; amount: string; message?: string }) => void;
@@ -17,6 +19,7 @@ const TipForm: React.FC<TipFormProps> = ({ onSubmit, loading }) => {
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchError, setSearchError] = useState<string | null>(null);
   const [showUsernameSearch, setShowUsernameSearch] = useState(false);
+  const { address } = useAppKitAccount();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -40,9 +43,9 @@ const TipForm: React.FC<TipFormProps> = ({ onSubmit, loading }) => {
       } else {
         setSearchError("User not found.");
       }
-    } catch (error) {
-      console.error("Error searching for user:", error);
-      setSearchError("Failed to fetch user details.");
+    } catch {
+      Toast("error", "Error Searchin for user or username not foudnd");
+      setSearchError("Failed to fetch user details.",);
     } finally {
       setSearchLoading(false);
     }
@@ -51,12 +54,17 @@ const TipForm: React.FC<TipFormProps> = ({ onSubmit, loading }) => {
   const handleSubmit = () => {
     const { walletAddress, amount, message } = formData;
 
-    if (!walletAddress || !amount || isNaN(Number(amount))) {
-      alert("Please fill in all fields correctly.");
+    if(!address) {
+      Toast("error", "Pls Connect Your Wallet");
       return;
     }
 
-    onSubmit({ walletAddress, amount, message: message || undefined }); // Include message
+    if (!amount || isNaN(Number(amount))) {
+      Toast("error", "Please fill in all fields correctly.");
+      return;
+    }
+
+    onSubmit({ walletAddress, amount, message: message || undefined });
   };
 
   return (
@@ -113,14 +121,14 @@ const TipForm: React.FC<TipFormProps> = ({ onSubmit, loading }) => {
 
       {/* Amount Field */}
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Amount in USD</label>
+        <label className="block text-sm font-medium text-gray-700">Number of Sol</label>
         <input
           type="text"
           name="amount"
           value={formData.amount}
           onChange={handleChange}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2"
-          placeholder="Enter amount in USD"
+          placeholder="Enter number of sol"
         />
       </div>
 
