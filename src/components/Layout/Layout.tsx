@@ -11,8 +11,8 @@ interface IProps {
 }
 
 const AppLayout = ({ children }: IProps) => {
-  const { isConnected,address } = useAppKitAccount();
-  const {fetchData, getSolBalance, fetchAllTransactions} = useUser();
+  const { isConnected, address, status } = useAppKitAccount();
+  const {fetchData, getSolBalance, fetchAllTransactions, resetState} = useUser();
 
   useEffect(() => {
     const fetchAllData = async () => {
@@ -27,17 +27,21 @@ const AppLayout = ({ children }: IProps) => {
           console.error("Error fetching data:", error);
         }
       }
+      if (status === "disconnected"){
+        resetState();
+      }
     };
   
     fetchAllData();
   }, [isConnected, address]);
+
 
   return (
     <>
       <ToastContainer />
       <Navbar />
       <div className="bg-white min-h-screen">
-          {children}
+        {children}
       </div>
       <Footer />
     </>

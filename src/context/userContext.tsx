@@ -26,6 +26,7 @@ interface UserContextType {
   sendTip: (recipientAddress: string, amount: number) => Promise<string>;
   getSolBalance: (walletAddress: string) => void;
   solBalance: number;
+  resetState: () => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -144,6 +145,14 @@ export const UserProvider = ({ children }: IProps) => {
     }
   };
 
+  const resetState = () => {
+    setUser(null);
+    setTokens([]);
+    setTransactions([]);
+    setTransactionSummary(null);
+    setSolBalance(0);
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -157,6 +166,7 @@ export const UserProvider = ({ children }: IProps) => {
         sendTip,
         getSolBalance,
         solBalance,
+        resetState
       }}
     >
       {children}

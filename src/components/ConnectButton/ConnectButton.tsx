@@ -10,7 +10,7 @@ const ConnectButton = () => {
   return (
     <button
       onClick={() => open()}
-      className="bg-gradient-to-r from-teal-400 to-teal-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-teal-500 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-300 transition duration-300 ease-in-out"
+      className="bg-gradient-to-r from-purple-600 to-blue-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gradient-to-r transition-all duration-300 hover:border-purple-600 border border-purple-600 text-base"
     >
     {isConnected ? 'Disconnect' : 'Connect Wallet'}
   </button>

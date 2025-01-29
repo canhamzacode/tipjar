@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tip Jar
 
-## Getting Started
+Tip Jar is a decentralized tipping platform that allows users to send and receive tips on the Solana blockchain. Users can tip friends and family while attaching a personal message to their transactions.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Send Tips**: Easily send SOL tips to friends, family, or any valid Solana wallet address.
+- **Attach Messages**: Add a personal message when sending a tip.
+- **Receive Tips**: Generate a shareable message with a unique username for easy tip collection.
+- **Reown Kit Integration**: Uses Reown AppKit for seamless Web3 login and wallet connections.
+- **Supabase Database**: Stores transaction history and user data securely.
+- **Built with**: Next.js, TypeScript, Tailwind CSS, Reown Kit, and Supabase.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Installation Guide
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/canhamzacode/tipjar
+   cd tipjar
+   ```
+2. **Set Up Environment Variables**:
+   Rename `.env.example` to `.env` and update the values:
+   ```bash
+   NEXT_PUBLIC_PROJECT_ID=your_project_id
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_KEY=your_supabase_key
+   ```
+3. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+4. **Run the Development Server**:
+   ```bash
+   npm run dev
+   ```
+   The app will be available at `http://localhost:3000`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Usage
 
-## Learn More
+### Sending a Tip
+1. Click the **Send Tip** button.
+2. Enter the recipient's Solana wallet address or username.
+3. (Optional) Attach a personal message.
+4. Confirm the transaction and send the tip.
 
-To learn more about Next.js, take a look at the following resources:
+### Receiving a Tip
+1. Click the **Receive Tip** button.
+2. Copy the generated message, which looks like this:
+   ```
+   Visit http://localhost:3000 and send a tip to the username: 8FzZYpsa
+   ```
+3. Share the message with others so they can tip you easily.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Future Updates
+- **Email Integration**: Users will be able to register an email.
+- **Profile Updates**: Users can customize their usernames.
+- **Enhanced Security & Features**: More control over transactions and tipping options.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## License
+This project is open-source under the **MIT License**.
 
-## Deploy on Vercel
+## Built by
+Made with ❤️ by [Hamza (CanHamzaCode)](https://x.com/canhamzacode)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Screenshots
+![Landing Page](./public/images/image-1.png)
+![Dashboard](./public/images/image-2.png)

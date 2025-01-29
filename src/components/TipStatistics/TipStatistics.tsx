@@ -58,7 +58,7 @@ const TipStatistics = () => {
 
   return (
     <div className="w-full bg-white text-black shadow-lg rounded-lg p-6 mb-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h2 className="text-2xl font-semibold mb-4">Tip Dashboard</h2>
           <p>Total SOL Balance: {solBalance}</p>
