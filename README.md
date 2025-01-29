@@ -2,6 +2,9 @@
 
 Tip Jar is a decentralized tipping platform that allows users to send and receive tips on the Solana blockchain. Users can tip friends and family while attaching a personal message to their transactions.
 
+## Disclaimer 
+⚠️ Disclaimer: Use in dev mode! Not responsible for any losses—use a dummy wallet while connecting. 😆
+
 ## Features
 
 - **Send Tips**: Easily send SOL tips to friends, family, or any valid Solana wallet address.
